@@ -10,6 +10,8 @@ import android.widget.ListView;
 
 import org.json.JSONObject;
 
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -58,13 +60,13 @@ public class MainActivity extends Activity implements HttpGetDataListener, OnCli
             lists.add(listData);
             textAdapter.notifyDataSetChanged();
         } catch (Exception e) {
-
+            e.printStackTrace();
         }
     }
 
 
     public String getRandomWelcomeTips() {
-        String welcomStr = null;
+        String welcomStr;
         welcomeStrs = this.getResources().getStringArray(R.array.welconmeTips);
         int index = (int) (Math.random() * (welcomeStrs.length - 1));
         welcomStr = welcomeStrs[index];
@@ -79,7 +81,11 @@ public class MainActivity extends Activity implements HttpGetDataListener, OnCli
         ListData listData = new ListData(contentStr, ListData.SEND, getTime());
         lists.add(listData);
         textAdapter.notifyDataSetChanged();
-        mHttpData = new HttpData("http://www.tuling123.com/openapi/api?key=997ed7fa8b069871c0d28e61ca03f1af&info=" + newstr, this);
+        try {
+            mHttpData = new HttpData(new URL("http://www.tuling123.com/openapi/api?key=997ed7fa8b069871c0d28e61ca03f1af&info=" + newstr), this);
+        } catch (MalformedURLException e) {
+            e.printStackTrace();
+        }
         mHttpData.execute();
     }
 
